@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Diablo Lite — Browser ARPG</title>
+  <link rel="stylesheet" href="css/diablo-style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-container">
+      <div class="loading-logo">⚔ DIABLO LITE ⚔</div>
+      <div class="loading-subtitle">Descent into Darkness</div>
+      <div class="progress-bar"><div id="progress-fill"></div></div>
+      <div id="loading-text">Awakening the nightmare...</div>
+    </div>
+  </div>
+
+  <!-- HUD Container -->
+  <div id="hud" class="hidden">
+    <!-- Top Left: Character Panel -->
+    <div id="character-panel" class="panel">
+      <div class="panel-header">⚔ CHARACTER</div>
+      <div class="panel-body">
+        <div class="stat-row">
+          <label>Level</label>
+          <span id="char-level">1</span>
+        </div>
+        <div class="stat-row">
+          <label>Experience</label>
+          <span id="char-exp">0/100</span>
+        </div>
+        <div class="stat-row">
+          <label>STR</label>
+          <span id="char-str">10</span>
+        </div>
+        <div class="stat-row">
+          <label>DEX</label>
+          <span id="char-dex">8</span>
+        </div>
+        <div class="stat-row">
+          <label>INT</label>
+          <span id="char-int">6</span>
+        </div>
+        <div class="stat-row">
+          <label>VIT</label>
+          <span id="char-vit">10</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Top: Health & Mana Bars -->
+    <div id="status-panel" class="panel center-panel">
+      <div class="health-section">
+        <div class="bar-label">Life Force</div>
+        <div class="status-bar hp-bar">
+          <div id="hp-fill" class="bar-fill"></div>
+          <span id="hp-text" class="bar-text">100/100</span>
+        </div>
+      </div>
+      <div class="mana-section">
+        <div class="bar-label">Mana</div>
+        <div class="status-bar mp-bar">
+          <div id="mp-fill" class="bar-fill"></div>
+          <span id="mp-text" class="bar-text">30/30</span>
+        </div>
+      </div>
+      <div class="exp-section">
+        <div class="bar-label">Experience</div>
+        <div class="status-bar xp-bar">
+          <div id="xp-fill" class="bar-fill"></div>
+          <span id="xp-text" class="bar-text">0/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Right: Minimap -->
+    <div id="minimap-panel" class="panel">
+      <div class="panel-header">MAP</div>
+      <canvas id="minimap-canvas" width="140" height="140"></canvas>
+    </div>
+
+    <!-- Bottom Left: Combat Log -->
+    <div id="combat-log-panel" class="panel">
+      <div class="panel-header">⚔ COMBAT LOG</div>
+      <div id="combat-log" class="combat-log"></div>
+    </div>
+
+    <!-- Bottom Center: Info -->
+    <div id="info-panel" class="panel center-bottom">
+      <div class="info-row">
+        <span id="gold">💰 Gold: 0</span>
+      </div>
+      <div class="info-row">
+        <span id="kills">☠ Kills: 0</span>
+      </div>
+      <div class="info-row">
+        <span id="act-info">Act 1: The Bloodied Fields</span>
+      </div>
+    </div>
+
+    <!-- Bottom Right: Equipment -->
+    <div id="equipment-panel" class="panel">
+      <div class="panel-header">⚙ EQUIPMENT</div>
+      <div class="equipment-grid">
+        <div class="equipment-slot" data-slot="weapon" title="Weapon">
+          <div class="slot-icon">🗡</div>
+          <div class="slot-name" id="eq-weapon">-</div>
+        </div>
+        <div class="equipment-slot" data-slot="armor" title="Armor">
+          <div class="slot-icon">🛡</div>
+          <div class="slot-name" id="eq-armor">-</div>
+        </div>
+        <div class="equipment-slot" data-slot="accessory" title="Accessory">
+          <div class="slot-icon">💍</div>
+          <div class="slot-name" id="eq-accessory">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Button -->
+    <button id="btn-menu" class="menu-btn">☰</button>
+    <button id="btn-inventory" class="inventory-btn">📦</button>
+  </div>
+
+  <!-- Inventory Panel -->
+  <div id="inventory-panel" class="inventory-panel hidden">
+    <div class="inventory-header">
+      <h2>INVENTORY</h2>
+      <button id="inventory-close" class="close-btn">✕</button>
+    </div>
+    <div id="inventory-items" class="inventory-grid">
+      <!-- Dynamically populated -->
+    </div>
+    <div class="inventory-info">
+      <div>Click items to equip</div>
+      <div>Right-click to drop</div>
+    </div>
+  </div>
+
+  <!-- Pause Menu -->
+  <div id="menu-overlay" class="menu-overlay hidden">
+    <div class="menu-box">
+      <h1>⚔ DIABLO LITE ⚔</h1>
+      <p>Descent into Darkness</p>
+      <div class="controls-section">
+        <h3>CONTROLS</h3>
+        <p><strong>Click:</strong> Move & interact</p>
+        <p><strong>Right-click:</strong> Attack</p>
+        <p><strong>I:</strong> Toggle Inventory</p>
+        <p><strong>ESC:</strong> Pause</p>
+      </div>
+      <div class="button-group">
+        <button id="btn-resume" class="menu-btn">RESUME</button>
+        <button id="btn-restart" class="menu-btn">RESTART</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Death Screen -->
+  <div id="death-screen" class="death-screen hidden">
+    <div class="death-content">
+      <h1>YOU HAVE DIED</h1>
+      <p>Respawning in <span id="respawn-timer">5</span> seconds...</p>
+      <div class="death-stats">
+        <div>Enemies Slain: <strong id="death-kills">0</strong></div>
+        <div>Gold Collected: <strong id="death-gold">0</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas for Three.js -->
+  <script type="module" src="js/diablo-main.js"></script>
+</body>
+</html>
