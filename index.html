@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Azeroth Lite — Mobile Browser RPG</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="logo">AZEROTH LITE</div>
+    <div class="subtitle">Mobile Browser RPG</div>
+    <div class="progress-bar"><div id="progress-fill"></div></div>
+    <div id="loading-text">Loading world...</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <!-- Top left player frame -->
+    <div id="player-frame">
+      <div class="portrait" id="player-portrait">⚔</div>
+      <div class="bars">
+        <div class="bar-row">
+          <span class="bar-label">HP</span>
+          <div class="bar hp-bar"><div id="hp-fill" class="fill"></div><span id="hp-text">100/100</span></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">MP</span>
+          <div class="bar mp-bar"><div id="mp-fill" class="fill"></div><span id="mp-text">50/50</span></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">XP</span>
+          <div class="bar xp-bar"><div id="xp-fill" class="fill"></div><span id="xp-text">0/100</span></div>
+        </div>
+      </div>
+      <div id="level-badge">1</div>
+    </div>
+
+    <!-- Target frame -->
+    <div id="target-frame" class="hidden">
+      <div class="portrait" id="target-portrait">👹</div>
+      <div class="bars">
+        <div class="bar-row">
+          <span class="bar-label">HP</span>
+          <div class="bar hp-bar"><div id="target-hp-fill" class="fill"></div><span id="target-hp-text">--/--</span></div>
+        </div>
+      </div>
+      <div id="target-name">Enemy</div>
+    </div>
+
+    <!-- Minimap -->
+    <div id="minimap">
+      <canvas id="minimap-canvas" width="120" height="120"></canvas>
+      <div id="minimap-label">Map</div>
+    </div>
+
+    <!-- Action Bar -->
+    <div id="action-bar">
+      <div class="skill-slot" data-key="1" id="skill-1"><span class="key">1</span><span class="icon">⚔</span><div class="cd"></div></div>
+      <div class="skill-slot" data-key="2" id="skill-2"><span class="key">2</span><span class="icon">🔥</span><div class="cd"></div></div>
+      <div class="skill-slot" data-key="3" id="skill-3"><span class="key">3</span><span class="icon">💚</span><div class="cd"></div></div>
+      <div class="skill-slot" data-key="4" id="skill-4"><span class="key">4</span><span class="icon">⚡</span><div class="cd"></div></div>
+      <div class="skill-slot" data-key="5" id="skill-5"><span class="key">5</span><span class="icon">🛡</span><div class="cd"></div></div>
+    </div>
+
+    <!-- Gold / Info -->
+    <div id="info-panel">
+      <span id="gold">🪙 0</span>
+      <span id="kills">☠ 0</span>
+    </div>
+
+    <!-- Combat log -->
+    <div id="combat-log"></div>
+
+    <!-- Mobile Controls -->
+    <div id="mobile-controls">
+      <div id="joystick-zone">
+        <div id="joystick-base">
+          <div id="joystick-knob"></div>
+        </div>
+      </div>
+      <div id="action-buttons">
+        <button id="btn-jump" class="action-btn">⬆</button>
+        <button id="btn-attack" class="action-btn attack">⚔</button>
+        <button id="btn-skill" class="action-btn skill">✨</button>
+      </div>
+    </div>
+
+    <!-- Pause / Menu button -->
+    <button id="btn-menu">☰</button>
+  </div>
+
+  <!-- Menu Overlay -->
+  <div id="menu-overlay" class="hidden">
+    <div class="menu-box">
+      <h2>Azeroth Lite</h2>
+      <p>Lightweight WoW-style browser RPG</p>
+      <button id="btn-resume">Resume</button>
+      <button id="btn-restart">Restart</button>
+      <div class="controls-help">
+        <h3>Controls</h3>
+        <p><b>Desktop:</b> WASD move · Mouse look · Space jump · 1-5 skills · LMB attack</p>
+        <p><b>Mobile:</b> Left joystick · Right buttons · Tap skills</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Death screen -->
+  <div id="death-screen" class="hidden">
+    <h1>You Died</h1>
+    <p>Respawning in <span id="respawn-timer">5</span>...</p>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
